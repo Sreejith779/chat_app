@@ -14,10 +14,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   FutureOr<void> loginInitialEvent(LoginInitialEvent event, Emitter<LoginState> emit) async{
 
-    emit(LoginLoadingActionState());
+
     bool isLogin =  await AuthService().loginUser(email: event.email, password: event.password);
     try{
+
       if(isLogin == true){
+        emit(LoginLoadingActionState());
         emit(LoginLoadedState());
       }
       else{
