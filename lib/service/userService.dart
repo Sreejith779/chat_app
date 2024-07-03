@@ -9,23 +9,18 @@ class UserService {
     return auth.currentUser;
   }
 
-  Future<List<QueryDocumentSnapshot<Object?>>> getCurrentUserData() async {
-    User? currentUser = await getCurrentUser();
+  Future<Map<String,dynamic>?>currentUserData()async{
+     final currentUser = await getCurrentUser();
 
-    try {
-      if (currentUser != null) {
-        QuerySnapshot querySnapshot =
-        await fireStore.collection("Users").doc(currentUser.uid).collection("Users").get();
-        return querySnapshot.docs;
-      } else {
-        throw FirebaseAuthException(
-          code: 'user-not-found',
 
-        );
-      }
-    } catch (e) {
-      print(e.toString());
-      throw e; // Ensure to re-throw the exception to propagate it
+     try{
+       DocumentSnapshot documentSnapshot =
+       await fireStore.collection("Users").doc(currentUser!.uid).get();
+       return documentSnapshot.data() as Map<String,dynamic>?;
+     }
+    catch(e){
+       print(e.toString());
     }
+
   }
 }
