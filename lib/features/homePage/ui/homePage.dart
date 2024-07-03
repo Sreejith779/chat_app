@@ -1,6 +1,7 @@
 import 'package:chat_app/features/loginPage/ui/loginPage.dart';
 import 'package:chat_app/service/authService.dart';
 import 'package:chat_app/service/chatRoomService.dart';
+import 'package:chat_app/service/userService.dart';
 import 'package:chat_app/util/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -105,7 +106,9 @@ class HomePage extends StatelessWidget {
                       const SizedBox(
                         width: 5,
                       ),
-                      ElevatedButton(onPressed: () {}, child: Text("Cancel")),
+                      ElevatedButton(onPressed: () async{
+                        await UserService().fetchAllUsers();
+                      }, child: Text("fetch")),
                     ],
                   )
                 ],
