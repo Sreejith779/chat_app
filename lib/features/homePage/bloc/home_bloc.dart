@@ -5,6 +5,8 @@ import 'package:chat_app/service/authService.dart';
 import 'package:chat_app/service/userService.dart';
 import 'package:meta/meta.dart';
 
+import '../../../model/userModel.dart';
+
 part 'home_event.dart';
 part 'home_state.dart';
 
@@ -24,7 +26,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> homeInitialLoadedEvent(HomeInitialLoadedEvent event, Emitter<HomeState> emit) async{
 emit(LoadingState());
     Map<String,dynamic>? data = await UserService().currentUserData();
-    emit(LoadedDataState(data: data));
+    final List<Map<String,dynamic>>userData = await UserService().fetchAllUsers();
+    List<UserModel>userDatas = userData.map((e) => UserModel(uid: e["uid"], name: e["name"], email: e["email"])).toList();
+    emit(LoadedDataState(data: data, userData: userDatas));
   }
 
   FutureOr<void> createRoom(CreateRoom event, Emitter<HomeState> emit) {

@@ -1,9 +1,11 @@
+import 'package:chat_app/features/chatPage/ui/chatPage.dart';
 import 'package:chat_app/features/loginPage/ui/loginPage.dart';
 import 'package:chat_app/service/authService.dart';
 import 'package:chat_app/service/chatRoomService.dart';
 import 'package:chat_app/service/userService.dart';
 import 'package:chat_app/util/texts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/home_bloc.dart';
 
@@ -29,7 +31,7 @@ class HomePage extends StatelessWidget {
                 final roomController = TextEditingController();
                 return Scaffold(
                   appBar: AppBar(
-                    title: Text("ChatApp"),
+                    title:     Text(loadedState.data!["name"].toString()),
                     automaticallyImplyLeading: false,
                     actions: [
                       InkWell(
@@ -49,10 +51,29 @@ class HomePage extends StatelessWidget {
                   body: Container(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(loadedState.data!["name"].toString()),
+Expanded(
+  child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1,
+  childAspectRatio: 4),
+      itemCount: loadedState.userData.length,
+      itemBuilder: (context,index){
+    return InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>
+        ChatPage(name: loadedState.userData[index].name)));
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10),
+        child: ListTile(
+          tileColor: Colors.grey.withOpacity(0.4),
+          title: Text(loadedState.userData[index].name),
+        ),
+      ),
+    );
+      }),
+),
                         ElevatedButton(
                           onPressed: () {
                             _showDialog(context, roomController);

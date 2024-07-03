@@ -11,8 +11,9 @@ class LoadingState extends HomeState{}
 
 class LoadedDataState extends HomeState{
   final Map<String,dynamic>? data;
+  final List<UserModel>userData;
 
-  LoadedDataState({required this.data});
+  LoadedDataState({required this.data,required this.userData});
 }
 
 class CreateRoomState extends HomeActionState{}
