@@ -62,7 +62,7 @@ Expanded(
     return InkWell(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context)=>
-        ChatPage(name: loadedState.userData[index].name)));
+        ChatPage(user: loadedState.userData[index],)));
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10),
@@ -122,7 +122,7 @@ Expanded(
                   Row(
                     children: [
                       ElevatedButton(onPressed: () async{
-                        await ChatService().createRoom(roomName: controller.text);
+                        await ChatRoomService().createRoom(roomName: controller.text);
                       }, child: Text("Create")),
                       const SizedBox(
                         width: 5,

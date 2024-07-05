@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChatService {
+class ChatRoomService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<void> createRoom({required String roomName}) async {
