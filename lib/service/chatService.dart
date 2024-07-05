@@ -1,6 +1,7 @@
 import 'package:chat_app/model/chatModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ChatService {
   final fireStore = FirebaseFirestore.instance;
@@ -25,37 +26,34 @@ class ChatService {
     }
   }
 
-  Future<List<ChatModel>> fetchMessages({required String receiverUid}) async {
-    final List<ChatModel> messages = [];
+  Stream<List<ChatModel>> fetchMessage({required String receiverId}) {
     final currentUser = auth.currentUser;
-    try {
-      // Fetch messages where the current user is the sender
-      QuerySnapshot<Map<String, dynamic>> sentMessagesSnapshot = await fireStore
-          .collection("Messages")
-          .where("senderId", isEqualTo: currentUser!.uid)
-          .where("receiverId", isEqualTo: receiverUid)
-          .get();
 
-      sentMessagesSnapshot.docs.forEach((element) {
-        messages.add(ChatModel.fromMap(element.data()));
-      });
+    Stream<QuerySnapshot<Map<String, dynamic>>> sendMessages = fireStore
+        .collection("Messages")
+        .where("senderId", isEqualTo: currentUser!.uid)
+        .where("receiverId", isEqualTo: receiverId)
+        .snapshots();
 
-      // Fetch messages where the current user is the receiver
-      QuerySnapshot<Map<String, dynamic>> receivedMessagesSnapshot = await fireStore
-          .collection("Messages")
-          .where("senderId", isEqualTo: receiverUid)
-          .where("receiverId", isEqualTo: currentUser.uid)
-          .get();
+    Stream<QuerySnapshot<Map<String, dynamic>>> receivedMessages = fireStore
+        .collection("Messages")
+        .where("receiverId", isEqualTo: currentUser.uid)
+        .where("senderId", isEqualTo: receiverId)
+        .snapshots();
 
-      receivedMessagesSnapshot.docs.forEach((element) {
-        messages.add(ChatModel.fromMap(element.data()));
-      });
+    return Rx.combineLatest2(sendMessages, receivedMessages,
+            (QuerySnapshot<Map<String, dynamic>> sendMessages,
+            QuerySnapshot<Map<String, dynamic>> receivedMessages) {
+          final List<ChatModel> messages = [];
+          sendMessages.docs.forEach((element) {
+            messages.add(ChatModel.fromMap(element.data()));
+          });
+          receivedMessages.docs.forEach((element) {
+            messages.add(ChatModel.fromMap(element.data()));
+          });
 
-      // Sort messages by time
-      messages.sort((a, b) => a.time.compareTo(b.time));
-    } catch (e) {
-      print(e.toString());
-    }
-    return messages;
+          messages.sort((a, b) => a.time.compareTo(b.time));
+          return messages;
+        });
   }
 }

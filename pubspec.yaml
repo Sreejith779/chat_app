@@ -40,6 +40,7 @@ dependencies:
   cloud_firestore: ^5.0.2
   firebase_auth: ^5.1.1
   chat_bubbles: ^1.6.0
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:
