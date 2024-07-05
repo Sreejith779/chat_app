@@ -58,14 +58,15 @@ class ChatPage extends StatelessWidget {
                       Expanded(
                         child: Container(
                           width: double.maxFinite,
-                          height: MediaQuery.of(context).size.height * 0.09,
+                          height: MediaQuery.of(context).size.height * 0.075,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             color: Colors.grey.withOpacity(0.4),
                           ),
                           child: TextField(
                             controller: messageController,
-                            decoration: const InputDecoration(
+                            decoration:   InputDecoration(
+                              suffixIcon: IconButton(onPressed: (){}, icon: Icon(Icons.image)),
                                 hintText: "Message",
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide.none)),
