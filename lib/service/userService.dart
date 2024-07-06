@@ -26,6 +26,8 @@ class UserService {
   Future<List<Map<String, dynamic>>> fetchAllUsers() async {
     final currentUser = await getCurrentUser();
 
+
+
     List<Map<String, dynamic>> data = [];
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot =

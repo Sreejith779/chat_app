@@ -10,6 +10,7 @@ class ChatService {
   Future<void> sendMessage({
     required String receiverUid,
     required String content,
+    String? imageUrl
   }) async {
     final currentUser = auth.currentUser;
     try {
@@ -17,6 +18,7 @@ class ChatService {
         "senderId": currentUser!.uid,
         "receiverId": receiverUid,
         "content": content,
+        "imageUrl": imageUrl,
         "time": FieldValue.serverTimestamp(),
       });
       print("Message sent Successfully");
@@ -43,6 +45,7 @@ class ChatService {
 
     return Rx.combineLatest2(sendMessages, receivedMessages,
             (QuerySnapshot<Map<String, dynamic>> sendMessages,
+
             QuerySnapshot<Map<String, dynamic>> receivedMessages) {
           final List<ChatModel> messages = [];
           sendMessages.docs.forEach((element) {

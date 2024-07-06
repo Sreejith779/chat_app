@@ -1,8 +1,10 @@
 import 'package:chat_app/model/userModel.dart';
 import 'package:chat_app/service/chatService.dart';
+import 'package:chat_bubbles/bubbles/bubble_normal_image.dart';
 import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../model/chatModel.dart';
 import '../bloc/chat_bloc.dart';
@@ -30,19 +32,32 @@ class ChatPage extends StatelessWidget {
                   Expanded(
                     child: StreamBuilder<List<ChatModel>>(
                       stream: ChatService().fetchMessage(receiverId: user.uid),
-                      builder: (BuildContext context, AsyncSnapshot<List<ChatModel>> snapshot) {
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<ChatModel>> snapshot) {
+                         var uuid = Uuid();
+                         final v4 = uuid.v4();
                         if (snapshot.hasData) {
                           List<ChatModel> messages = snapshot.data!;
                           return ListView.builder(
                             itemCount: messages.length,
                             itemBuilder: (context, index) {
-                              bool isSender = snapshot.data![index].receiverId == user.uid;
-                              return  BubbleSpecialThree(
-                                isSender: isSender,
-                                  color:
-                                isSender?  Color(0xFF1B97F3): Color(0xFFE8E8EE),
+                              bool isSender =
+                                  snapshot.data![index].receiverId == user.uid;
+                              return 
+                              snapshot.data![index].imageUrl !=null?
+                                  BubbleNormalImage(id: v4,
+                                      color: Colors.transparent,
+                                      image: Image.network(snapshot.data![index].imageUrl.toString(),)):
+
+                                BubbleSpecialThree(
+                                  isSender: isSender,
+                                  color: isSender
+                                      ? Color(0xFF1B97F1)
+                                      : Color(0xFFE8E8EE),
                                   tail: false,
-                                  text: snapshot.data![index].content);
+
+                                  text:
+                                  snapshot.data![index].content);
                             },
                           );
                         } else if (snapshot.hasError) {
@@ -65,10 +80,16 @@ class ChatPage extends StatelessWidget {
                           ),
                           child: TextField(
                             controller: messageController,
-                            decoration:   InputDecoration(
-                              suffixIcon: IconButton(onPressed: (){}, icon: Icon(Icons.image)),
+                            decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                    onPressed: () {
+                                      context
+                                          .read<ChatBloc>()
+                                          .add(ImageSelectEvent(receiverUid: user.uid));
+                                    },
+                                    icon: const Icon(Icons.image)),
                                 hintText: "Message",
-                                border: OutlineInputBorder(
+                                border: const OutlineInputBorder(
                                     borderSide: BorderSide.none)),
                           ),
                         ),
