@@ -15,10 +15,12 @@ class Texts{
     fontFamily: GoogleFonts.adamina().fontFamily,
     color: Colors.black,
     fontSize: 18,
+    fontWeight: FontWeight.w600
   );
   TextStyle Dtext = TextStyle(
     fontFamily: GoogleFonts.cairo().fontFamily,
     color: Colors.black,
+    fontWeight: FontWeight.w500,
     fontSize: 24,
   );
 }

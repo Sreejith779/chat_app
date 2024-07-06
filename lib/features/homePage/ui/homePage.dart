@@ -32,71 +32,116 @@ class HomePage extends StatelessWidget {
                 final loadedState = state as LoadedDataState;
                 final roomController = TextEditingController();
                 return Scaffold(
-
                   body: Container(
-                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Container(
-                          height: MediaQuery.of(context).size.height*0.25,
+                          height: MediaQuery.of(context).size.height * 0.24,
                           width: double.maxFinite,
-                          margin: EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage("assets/design.png"),
+                                  fit: BoxFit.cover,
+                                  opacity: 0.2)),
+                          margin: EdgeInsets.all(20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Hello, Lisa",
-                                  style: Texts().Mtext,),
+                                  Text(
+                                    "Hello, ${loadedState.data!["name"]}",
+                                    style: Texts().Mtext,
+                                  ),
                                   CircleAvatar(
                                     backgroundColor: Colors.white,
-                                    child: IconButton(onPressed: () {  }, icon: Icon(Icons.menu),),
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.menu),
+                                    ),
                                   )
                                 ],
                               ),
-                              Text(DateFormat('h:mm a, EEEE').format(DateTime.now()),
-                              style: Texts().Dtext.copyWith(
-                                fontSize: 24
-                              ),),
+                              Text(
+                                DateFormat('h:mm a, EEEE')
+                                    .format(DateTime.now()),
+                                style: Texts().Dtext.copyWith(fontSize: 24),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 50),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    _showDialog(context, roomController);
+                                  },
+                                  child: Text("Create Chat room"),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                         Expanded(
-                          child: GridView.builder(
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 1, childAspectRatio: 4),
-                              itemCount: loadedState.userData.length,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ChatPage(
-                                                  user: loadedState
-                                                      .userData[index],
-                                                )));
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(bottom: 10),
-                                    child: ListTile(
-                                      tileColor: Colors.grey.withOpacity(0.4),
-                                      title: Text(
-                                          loadedState.userData[index].name),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.2),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30))),
+                            child: GridView.builder(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 1, childAspectRatio: 4),
+                                itemCount: loadedState.userData.length,
+                                itemBuilder: (context, index) {
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ChatPage(
+                                                    user: loadedState
+                                                        .userData[index],
+                                                  )));
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: CircleAvatar(
+                                              radius: 30,
+                                              backgroundColor:
+                                                  Colors.grey.withOpacity(0.4),
+                                              child: Icon(
+                                                Icons.person,
+                                                size: 30,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            loadedState.userData![index].name,
+                                            style: Texts().Stext.copyWith(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ],
+                                      ),
+                                      alignment: Alignment.centerLeft,
                                     ),
-                                  ),
-                                );
-                              }),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _showDialog(context, roomController);
-                          },
-                          child: Text("Create Chat room"),
+                                  );
+                                }),
+                          ),
                         ),
                       ],
                     ),

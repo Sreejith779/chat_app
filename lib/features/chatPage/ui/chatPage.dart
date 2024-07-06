@@ -2,6 +2,7 @@ import 'package:chat_app/model/userModel.dart';
 import 'package:chat_app/service/chatService.dart';
 import 'package:chat_bubbles/bubbles/bubble_normal_image.dart';
 import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
@@ -21,11 +22,13 @@ class ChatPage extends StatelessWidget {
       child: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           return Scaffold(
+            backgroundColor: Colors.white.withOpacity(0.9),
             appBar: AppBar(
               title: Text(user.name),
+              backgroundColor: Colors.white.withOpacity(0.8),
             ),
             body: Container(
-              margin: EdgeInsets.all(10),
+
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -52,12 +55,15 @@ class ChatPage extends StatelessWidget {
                                 BubbleSpecialThree(
                                   isSender: isSender,
                                   color: isSender
-                                      ? Color(0xFF1B97F1)
+                                      ?  Colors.black
                                       : Color(0xFFE8E8EE),
                                   tail: false,
-
+textStyle: TextStyle(
+  color: isSender?
+  Colors.white:Colors.black
+),
                                   text:
-                                  snapshot.data![index].content);
+                                  snapshot.data![index].content,);
                             },
                           );
                         } else if (snapshot.hasError) {
@@ -68,47 +74,70 @@ class ChatPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: double.maxFinite,
-                          height: MediaQuery.of(context).size.height * 0.075,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.grey.withOpacity(0.4),
-                          ),
-                          child: TextField(
-                            controller: messageController,
-                            decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                    onPressed: () {
-                                      context
-                                          .read<ChatBloc>()
-                                          .add(ImageSelectEvent(receiverUid: user.uid));
-                                    },
-                                    icon: const Icon(Icons.image)),
-                                hintText: "Message",
-                                border: const OutlineInputBorder(
-                                    borderSide: BorderSide.none)),
+                  Container(
+                    height: MediaQuery.of(context).size.height*0.15,
+                    width: double.maxFinite,
+                   decoration: const BoxDecoration(
+                     color: Colors.white,
+                     borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                     topRight: Radius.circular(30))
+                   ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: double.maxFinite,
+                              height: MediaQuery.of(context).size.height * 0.075,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.grey.withOpacity(0.4),
+                              ),
+                              child: TextField(
+                                controller: messageController,
+                                decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                        onPressed: () {
+                                          context
+                                              .read<ChatBloc>()
+                                              .add(ImageSelectEvent(receiverUid: user.uid));
+                                        },
+                                        icon: Image.asset("assets/paper-pin.png",
+                                        height: 25,width: 25,)),
+                                    hintText: "Message",
+                                    border: const OutlineInputBorder(
+                                        borderSide: BorderSide.none)),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          if (messageController.text.isNotEmpty) {
-                            context.read<ChatBloc>().add(SentChatEvent(
-                                receiverUid: user.uid,
-                                content: messageController.text));
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Colors.black,
+                            child: IconButton(
+                              onPressed: () async {
+                                if (messageController.text.isNotEmpty) {
+                                  context.read<ChatBloc>().add(SentChatEvent(
+                                      receiverUid: user.uid,
+                                      content: messageController.text));
 
-                            messageController.clear();
-                          }
-                        },
-                        icon: Icon(Icons.send),
-                        color: Colors.blue,
-                        iconSize: 30,
-                      )
-                    ],
+                                  messageController.clear();
+                                }
+                              },
+                              icon: Image.asset("assets/send.png",
+                              color: Colors.white,
+                              height: 25,),
+                              color: Colors.blue,
+                              iconSize: 30,
+                            ) ,
+                          ),
+                        )
+
+                      ],
+                    ),
                   )
                 ],
               ),
