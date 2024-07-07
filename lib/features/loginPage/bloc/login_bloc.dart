@@ -9,28 +9,23 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitial()) {
-  on<LoginInitialEvent>(loginInitialEvent);
+    on<LoginInitialEvent>(loginInitialEvent);
   }
 
-  FutureOr<void> loginInitialEvent(LoginInitialEvent event, Emitter<LoginState> emit) async{
+  FutureOr<void> loginInitialEvent(
+      LoginInitialEvent event, Emitter<LoginState> emit) async {
+    emit(LoginLoadingState());
+    try {
+      bool isLogin = await AuthService()
+          .loginUser(email: event.email, password: event.password);
+      if (isLogin == true) {
 
-
-
-    try{
-      bool isLogin =  await AuthService().loginUser(email: event.email, password: event.password);
-      if(isLogin == true){
-        emit(LoginLoadingActionState());
         emit(LoginLoadedState());
-      }
-      else{
+      } else {
         emit(LoginErrorActionState());
       }
-
-
-    }catch(e){
-
+    } catch (e) {
       print(e.toString());
     }
-
   }
 }

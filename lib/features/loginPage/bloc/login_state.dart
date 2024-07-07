@@ -7,7 +7,7 @@ abstract class LoginActionState extends LoginState {}
 
 class LoginInitial extends LoginState {}
 
-class LoginLoadingActionState extends LoginActionState {}
+class LoginLoadingState extends LoginState {}
 
 class LoginLoadedState extends LoginState {}
 

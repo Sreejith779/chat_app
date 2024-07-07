@@ -1,5 +1,6 @@
 import 'package:chat_app/features/chatPage/ui/chatPage.dart';
 import 'package:chat_app/features/loginPage/ui/loginPage.dart';
+import 'package:chat_app/service/authService.dart';
 
 import 'package:chat_app/service/chatRoomService.dart';
 import 'package:chat_app/service/userService.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import '../bloc/home_bloc.dart';
 
 class HomePage extends StatelessWidget {
@@ -27,8 +29,7 @@ class HomePage extends StatelessWidget {
         },
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            switch (state.runtimeType) {
-              case LoadedDataState:
+            if (state is LoadedDataState) {
                 final loadedState = state as LoadedDataState;
                 final roomController = TextEditingController();
                 return Scaffold(
@@ -59,10 +60,18 @@ class HomePage extends StatelessWidget {
                                   ),
                                   CircleAvatar(
                                     backgroundColor: Colors.white,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.menu),
-                                    ),
+                                    child: PopupMenuButton(
+                                      color: Colors.white,
+                                      itemBuilder:
+                                        (BuildContext context)=>
+                                      [
+                                        PopupMenuItem(child: InkWell(
+                                            onTap: (){
+                                         context.read<HomeBloc>().add(LogOutEvent());
+                                            },
+                                            child: Text("Logout")))
+                                      ],)
+
                                   )
                                 ],
                               ),
@@ -83,6 +92,7 @@ class HomePage extends StatelessWidget {
                             ],
                           ),
                         ),
+
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
@@ -111,7 +121,7 @@ class HomePage extends StatelessWidget {
                                       decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius:
-                                              BorderRadius.circular(15)),
+                                              BorderRadius.circular(18)),
                                       child: Row(
                                         children: [
                                           Padding(
@@ -147,14 +157,14 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 );
+            }else{
+            return  Scaffold(
+            body: Center(
+            child: Lottie.asset("assets/loader.json",
+            height: 60,width: 60),
+            ),
+            );
 
-              case LoadingState:
-                return CircularProgressIndicator();
-
-              default:
-                return SizedBox(
-                  child: Text("Error"),
-                );
             }
           },
         ),

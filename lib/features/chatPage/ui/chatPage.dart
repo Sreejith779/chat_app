@@ -5,6 +5,7 @@ import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../model/chatModel.dart';
@@ -28,7 +29,6 @@ class ChatPage extends StatelessWidget {
               backgroundColor: Colors.white.withOpacity(0.8),
             ),
             body: Container(
-
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -37,8 +37,8 @@ class ChatPage extends StatelessWidget {
                       stream: ChatService().fetchMessage(receiverId: user.uid),
                       builder: (BuildContext context,
                           AsyncSnapshot<List<ChatModel>> snapshot) {
-                         var uuid = Uuid();
-                         final v4 = uuid.v4();
+                        var uuid = Uuid();
+                        final v4 = uuid.v4();
                         if (snapshot.hasData) {
                           List<ChatModel> messages = snapshot.data!;
                           return ListView.builder(
@@ -46,42 +46,55 @@ class ChatPage extends StatelessWidget {
                             itemBuilder: (context, index) {
                               bool isSender =
                                   snapshot.data![index].receiverId == user.uid;
-                              return 
-                              snapshot.data![index].imageUrl !=null?
-                                  BubbleNormalImage(id: v4,
-                                      color: Colors.transparent,
-                                      image: Image.network(snapshot.data![index].imageUrl.toString(),)):
-
-                                BubbleSpecialThree(
+                              return snapshot.data![index].imageUrl != null
+                                  ? BubbleNormalImage(
                                   isSender: isSender,
-                                  color: isSender
-                                      ?  Colors.black
-                                      : Color(0xFFE8E8EE),
-                                  tail: false,
-textStyle: TextStyle(
-  color: isSender?
-  Colors.white:Colors.black
-),
-                                  text:
-                                  snapshot.data![index].content,);
+                                      id: v4,
+                                      color: Colors.transparent,
+                                      image: Image.network(
+                                        snapshot.data![index].imageUrl
+                                            .toString(),
+                                      ))
+
+                                  : BubbleSpecialThree(
+                                      isSender: isSender,
+                                      color: isSender
+                                          ? Colors.black
+                                          : Colors.white,
+                                      tail: false,
+                                      textStyle: TextStyle(
+                                        fontSize: 18,
+                                          color: isSender
+                                              ? Colors.white
+                                              : Colors.black),
+                                      text: snapshot.data![index].content,
+                                    );
                             },
                           );
                         } else if (snapshot.hasError) {
-                          return Center(child: Text("Something went wrong"));
+                          return   Center(
+                              child:    Lottie.asset(
+                                  "assets/loader.json",
+                                  height: 60,
+                                  width: 60));
                         } else {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(
+                              child:    Lottie.asset(
+                                  "assets/loader.json",
+                                  height: 60,
+                                  width: 60));
                         }
                       },
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height*0.15,
+                    height: MediaQuery.of(context).size.height * 0.15,
                     width: double.maxFinite,
-                   decoration: const BoxDecoration(
-                     color: Colors.white,
-                     borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-                     topRight: Radius.circular(30))
-                   ),
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30))),
                     child: Row(
                       children: [
                         Expanded(
@@ -89,7 +102,8 @@ textStyle: TextStyle(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                               width: double.maxFinite,
-                              height: MediaQuery.of(context).size.height * 0.075,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.075,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.grey.withOpacity(0.4),
@@ -99,12 +113,15 @@ textStyle: TextStyle(
                                 decoration: InputDecoration(
                                     suffixIcon: IconButton(
                                         onPressed: () {
-                                          context
-                                              .read<ChatBloc>()
-                                              .add(ImageSelectEvent(receiverUid: user.uid));
+                                          context.read<ChatBloc>().add(
+                                              ImageSelectEvent(
+                                                  receiverUid: user.uid));
                                         },
-                                        icon: Image.asset("assets/paper-pin.png",
-                                        height: 25,width: 25,)),
+                                        icon: Image.asset(
+                                          "assets/paper-pin.png",
+                                          height: 25,
+                                          width: 25,
+                                        )),
                                     hintText: "Message",
                                     border: const OutlineInputBorder(
                                         borderSide: BorderSide.none)),
@@ -127,15 +144,16 @@ textStyle: TextStyle(
                                   messageController.clear();
                                 }
                               },
-                              icon: Image.asset("assets/send.png",
-                              color: Colors.white,
-                              height: 25,),
+                              icon: Image.asset(
+                                "assets/send.png",
+                                color: Colors.white,
+                                height: 25,
+                              ),
                               color: Colors.blue,
                               iconSize: 30,
-                            ) ,
+                            ),
                           ),
                         )
-
                       ],
                     ),
                   )
