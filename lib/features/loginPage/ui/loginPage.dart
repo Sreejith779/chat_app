@@ -1,6 +1,5 @@
 import 'package:chat_app/features/homePage/ui/homePage.dart';
 import 'package:chat_app/features/registerPage/ui/registerPage.dart';
-import 'package:chat_app/service/authService.dart';
 import 'package:chat_app/util/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

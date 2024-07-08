@@ -6,7 +6,6 @@ import 'package:chat_app/service/imageService.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 
-import '../../../model/chatModel.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
